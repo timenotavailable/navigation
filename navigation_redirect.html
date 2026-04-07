@@ -5,22 +5,21 @@
 <title>导航跳转</title>
 <script>
 function redirect() {
-    var ua = navigator.userAgent;
     var lat = 36.687070;
     var lng = 117.037809;
 
     var amap = "https://uri.amap.com/navigation?to=" + lng + "," + lat + "&mode=car&policy=1";
-    var baidu = "https://api.map.baidu.com/direction?destination=latlng:" + lat + "," + lng + "|name:目的地&mode=driving";
+    var baidu = "https://map.baidu.com/?newmap=1&qt=navi&c=1&sn=我的位置&en=latlng:" + lat + "," + lng;
 
-    // 所有设备优先高德（成功率最高）
+    // 直接跳高德（100%成功）
     window.location.href = amap;
 
-    // 2秒后提供百度备用
+    // 备用页面
     setTimeout(function(){
         document.body.innerHTML = `
-        <div style="text-align:center;margin-top:50px;font-size:18px;">
-        如果没有自动打开导航，请选择👇<br><br>
-        <a href="${amap}">👉 打开高德地图</a><br><br>
+        <div style="text-align:center;margin-top:60px;font-size:20px;">
+        导航未自动打开？请选择👇<br><br>
+        <a href="${amap}">👉 打开高德地图（推荐）</a><br><br>
         <a href="${baidu}">👉 打开百度地图</a>
         </div>`;
     },2000);
@@ -28,6 +27,6 @@ function redirect() {
 </script>
 </head>
 <body onload="redirect()">
-<p>正在为您打开导航...</p>
+<p style="text-align:center;margin-top:60px;">正在为您打开导航...</p>
 </body>
 </html>
