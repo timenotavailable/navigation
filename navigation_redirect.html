@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>导航跳转</title>
+<script>
+function redirect() {
+    var ua = navigator.userAgent;
+    var lat = 36.687070;
+    var lng = 117.037809;
+
+    // Amap
+    var amap = "https://uri.amap.com/navigation?to=" + lng + "," + lat + "&mode=car&policy=1";
+    // Baidu
+    var baidu = "https://api.map.baidu.com/direction?destination=latlng:" + lat + "," + lng + "|name:目的地&mode=driving";
+
+    if (/iPhone|iPad|iOS/i.test(ua)) {
+        window.location.href = amap;
+    } else {
+        window.location.href = baidu;
+    }
+}
+</script>
+</head>
+<body onload="redirect()">
+<p>正在为您打开导航...</p>
+</body>
+</html>
