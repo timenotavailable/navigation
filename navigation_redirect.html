@@ -2,98 +2,106 @@
 <html>
 <head>
 <meta charset="utf-8">
-<title>北园地铁站停车场导航</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>导航中转</title>
 
-<script>
-function isWeChat() {
-  return /micromessenger/i.test(navigator.userAgent);
+<style>
+body{
+    margin:0;
+    font-family: -apple-system, BlinkMacSystemFont, sans-serif;
+    text-align:center;
+    background:#f5f5f5;
 }
-
-function isAndroid() {
-  return /android/i.test(navigator.userAgent);
+.box{
+    padding:40px 20px;
 }
-
-function isIOS() {
-  return /iphone|ipad|ipod/i.test(navigator.userAgent);
+.btn{
+    display:block;
+    margin:15px auto;
+    padding:15px;
+    width:80%;
+    max-width:300px;
+    background:#007aff;
+    color:#fff;
+    border-radius:8px;
+    text-decoration:none;
+    font-size:16px;
 }
-
-window.onload = function() {
-
-  var lat = "36.687070485067174";
-  var lng = "117.03780949115752";
-  var name = "北园地铁站停车场";
-
-  // ===== 地图URL =====
-  var amap = "https://uri.amap.com/navigation?to=" + lng + "," + lat + "," + name + "&mode=car";
-  var baidu = "https://api.map.baidu.com/direction?destination=latlng:" + lat + "," + lng + "|name:" + name + "&mode=driving";
-  var apple = "https://maps.apple.com/?daddr=" + lat + "," + lng;
-
-  // ===== 微信内 =====
-  if (isWeChat()) {
-    document.getElementById("wechat").style.display = "block";
-    return;
-  }
-
-  // ===== 安卓 =====
-  if (isAndroid()) {
-    window.location.href = amap;
-
-    // 兜底：2秒后跳百度
-    setTimeout(function(){
-      window.location.href = baidu;
-    }, 2000);
-
-    return;
-  }
-
-  // ===== 苹果 =====
-  if (isIOS()) {
-    window.location.href = amap;
-
-    // 兜底：2秒后跳Apple地图
-    setTimeout(function(){
-      window.location.href = apple;
-    }, 2000);
-
-    return;
-  }
-
-  // ===== 其他设备 =====
-  window.location.href = amap;
+.tip{
+    position:fixed;
+    top:0;
+    left:0;
+    right:0;
+    bottom:0;
+    background:rgba(0,0,0,0.8);
+    color:#fff;
+    display:none;
+    align-items:center;
+    justify-content:center;
+    font-size:18px;
+    padding:20px;
 }
-</script>
+</style>
 
 </head>
 
-<body style="text-align:center;margin-top:100px;font-family:Arial;">
+<body>
 
-<h2>📍 北园地铁站停车场</h2>
+<div class="box">
+    <h2>📍 北园地块停车场</h2>
+    <p>请选择导航方式</p>
 
-<!-- 微信提示 -->
-<div id="wechat" style="display:none;">
-  <p>⚠️ 微信限制无法直接打开导航</p>
-  <p>请点击下方按钮或右上角用浏览器打开</p>
-
-  <div style="margin-top:30px;">
-    <a href="https://uri.amap.com/navigation?to=117.03780949115752,36.687070485067174,北园地铁站停车场&mode=car">
-      <button style="font-size:18px;padding:12px 25px;margin:10px;border-radius:8px;background:#07c160;color:white;border:none;">
-        高德导航
-      </button>
-    </a>
-
-    <br>
-
-    <a href="https://api.map.baidu.com/direction?destination=latlng:36.687070485067174,117.03780949115752|name:北园地铁站停车场&mode=driving">
-      <button style="font-size:18px;padding:12px 25px;margin:10px;border-radius:8px;background:#3385ff;color:white;border:none;">
-        百度导航
-      </button>
-    </a>
-  </div>
-
-  <p style="margin-top:20px;color:gray;">
-    👉 或点击右上角 ··· → 在浏览器打开
-  </p>
+    <a class="btn" id="amap">打开高德地图</a>
+    <a class="btn" id="baidu">打开百度地图</a>
+    <a class="btn" id="apple">打开Apple地图</a>
 </div>
+
+<div class="tip" id="tip">
+    请点击右上角 → 在浏览器打开
+</div>
+
+<script>
+
+// ======= 你的坐标（已填）=======
+var lat = 36.687070485067174;
+var lng = 117.03780949115752;
+var name = "北园地块停车场";
+
+// ======= 判断环境 =======
+var ua = navigator.userAgent.toLowerCase();
+var isWeixin = ua.indexOf('micromessenger') !== -1;
+var isAndroid = ua.indexOf('android') !== -1;
+var isiOS = /iphone|ipad|ipod/.test(ua);
+
+// ======= 地图URL =======
+var amap = `https://uri.amap.com/marker?position=${lng},${lat}&name=${name}`;
+var baidu = `https://api.map.baidu.com/marker?location=${lat},${lng}&title=${name}&output=html`;
+var apple = `https://maps.apple.com/?daddr=${lat},${lng}&q=${name}`;
+
+// ======= 按钮绑定 =======
+document.getElementById("amap").onclick = () => jump(amap);
+document.getElementById("baidu").onclick = () => jump(baidu);
+document.getElementById("apple").onclick = () => jump(apple);
+
+// ======= 跳转逻辑 =======
+function jump(url){
+    if(isWeixin){
+        document.getElementById("tip").style.display="flex";
+    }else{
+        window.location.href = url;
+    }
+}
+
+// ======= 非微信自动跳转（更丝滑）=======
+if(!isWeixin){
+    if(isAndroid){
+        window.location.href = amap;
+    }else if(isiOS){
+        window.location.href = apple;
+    }
+}
+
+</script>
 
 </body>
 </html>
