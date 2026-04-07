@@ -9,16 +9,21 @@ function redirect() {
     var lat = 36.687070;
     var lng = 117.037809;
 
-    // Amap
     var amap = "https://uri.amap.com/navigation?to=" + lng + "," + lat + "&mode=car&policy=1";
-    // Baidu
     var baidu = "https://api.map.baidu.com/direction?destination=latlng:" + lat + "," + lng + "|name:目的地&mode=driving";
 
-    if (/iPhone|iPad|iOS/i.test(ua)) {
-        window.location.href = amap;
-    } else {
-        window.location.href = baidu;
-    }
+    // 所有设备优先高德（成功率最高）
+    window.location.href = amap;
+
+    // 2秒后提供百度备用
+    setTimeout(function(){
+        document.body.innerHTML = `
+        <div style="text-align:center;margin-top:50px;font-size:18px;">
+        如果没有自动打开导航，请选择👇<br><br>
+        <a href="${amap}">👉 打开高德地图</a><br><br>
+        <a href="${baidu}">👉 打开百度地图</a>
+        </div>`;
+    },2000);
 }
 </script>
 </head>
